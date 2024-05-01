@@ -179,6 +179,29 @@ public class Banco {
 		return emp;
 	}
 
+	public static List<Empregado> buscarEmpregadoPorAtivoInativo(Boolean ativo) throws SQLException {
+		List<Empregado> emps = new ArrayList<Empregado>();
+		Connection conn = Banco.getConexao();
+		String sql = "SELECT * FROM Empregado WHERE ";
+		if (ativo)
+			sql += "desligamento is null";
+		else
+			sql += "desligamento is not null";
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		ResultSet rs = prepStmt.executeQuery();
+		while (rs.next()) {
+			String _matricula = rs.getString("matricula");
+			String nome = rs.getString("nome");
+			Date admissao = rs.getDate("admissao");
+			Date desligamento = rs.getDate("desligamento");
+			Double salario = rs.getDouble("salario");
+			emps.add(new Empregado(_matricula, nome, admissao, desligamento, salario));
+		}
+		rs.close();
+		prepStmt.close();
+		return emps;
+	}
+
 	public static Usuario buscarUsuarioPorMatricula(String matricula) throws SQLException {
 		Usuario usu = null;
 		Connection conn = Banco.getConexao();

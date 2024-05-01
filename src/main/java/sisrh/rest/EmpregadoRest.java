@@ -50,6 +50,27 @@ public class EmpregadoRest {
 		}
 	}
 
+	@GET
+	@Path("ativoinativo/{somenteAtivo}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response obterEmpregadoAtivo(@PathParam("somenteAtivo") Boolean somenteAtivo) throws Exception {
+		try {
+			List<Empregado> empregados = Banco.buscarEmpregadoPorAtivoInativo(somenteAtivo);
+			GenericEntity<List<Empregado>> entity = new GenericEntity<List<Empregado>>(empregados) {
+			};
+			if (empregados != null) {
+				return Response.ok().entity(entity).build();
+			} else {
+				return Response.status(Status.NOT_FOUND).entity("{ \"mensagem\" : \"Empregado nao encontrado!\" }")
+						.build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(
+					"{ \"mensagem\" : \"Falha para obter empregado!\" , \"detalhe\" :  \"" + e.getMessage() + "\"  }")
+					.build();
+		}
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

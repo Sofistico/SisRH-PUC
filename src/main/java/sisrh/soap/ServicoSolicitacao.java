@@ -25,11 +25,10 @@ public class ServicoSolicitacao {
 	@WebMethod(action = "listar")
 	public Solicitacoes listar(@WebParam(name = "usuario") String usuario) throws Exception {
 		Autenticador.autenticarUsuarioSenha(context);
-
 		Solicitacoes solicitacoes = new Solicitacoes();
 		List<Solicitacao> lista = Banco.listarSolicitacoes(usuario);
 		for (Solicitacao emp : lista) {
-			solicitacoes.getEmpregados().add(emp);
+			solicitacoes.getSolicitacoes().add(emp);
 		}
 		return solicitacoes;
 	}
